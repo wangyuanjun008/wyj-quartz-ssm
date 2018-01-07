@@ -1,83 +1,58 @@
 package com.wyj.entity;
 
 import java.io.Serializable;
-import java.security.KeyStore.PrivateKeyEntry;
 import java.util.Date;
 
 import org.quartz.JobDataMap;
 
-public class JobEntity implements Serializable {
+/**
+ * Job Dto 与数据库无关联
+ * 
+ * @author：WangYuanJun
+ * @date：2018年1月6日 下午10:16:59
+ */
+public class JobDto implements Serializable {
 
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
 
-    private Long jobId;
+    private String jobName;// 任务名
 
-    private String jobType;
+    private String jobGroupName;// 任务组
 
-    private String jobGroup;
+    private String triggerName;// 触发器名称
 
-    private String jobName;//任务名
+    private String triggerGroupName;// 触发器组名称
 
-    private String jobGroupName;//任务组
+    private String cronExpression;// cron表达式
 
-    private String triggerName;//触发器名称
+    private Date previousFireTime;// 上次运行时间
 
-    private String triggerGroupName;//触发器组名称
+    private Date nextFireTime;// 下次运行时间
 
-    private String cronExpression;//cron表达式
+    private String jobStatus;// 任务状态
 
-    private Date previousFireTime;
-
-    private Date nextFireTime;
-
-    private String jobStatus;
-
-    private Long runTimes;
-
-    private Long duration;
+    // private Long duration;
 
     private Date startTime;
 
     private Date endTime;
 
-    private String jobMemo;
-
     private String jobClass;
-
-    private String jobMethod;
-
-    private String jobObject;
 
     private Long count;
 
     private JobDataMap jobDataMap;
 
-    public Long getJobId() {
-        return jobId;
-    }
+    private String oldJobName;// 任务名
 
-    public void setJobId(Long jobId) {
-        this.jobId = jobId;
-    }
+    private String oldJobGroupName;// 任务组
 
-    public String getJobType() {
-        return jobType;
-    }
+    private String oldTriggerName;// 触发器名称
 
-    public void setJobType(String jobType) {
-        this.jobType = jobType;
-    }
-
-    public String getJobGroup() {
-        return jobGroup;
-    }
-
-    public void setJobGroup(String jobGroup) {
-        this.jobGroup = jobGroup;
-    }
+    private String oldTriggerGroupName;// 触发器组名称
 
     public String getJobName() {
         return jobName;
@@ -127,22 +102,6 @@ public class JobEntity implements Serializable {
         this.jobStatus = jobStatus;
     }
 
-    public Long getRunTimes() {
-        return runTimes;
-    }
-
-    public void setRunTimes(Long runTimes) {
-        this.runTimes = runTimes;
-    }
-
-    public Long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Long duration) {
-        this.duration = duration;
-    }
-
     public Date getStartTime() {
         return startTime;
     }
@@ -159,44 +118,12 @@ public class JobEntity implements Serializable {
         this.endTime = endTime;
     }
 
-    public String getJobMemo() {
-        return jobMemo;
-    }
-
-    public void setJobMemo(String jobMemo) {
-        this.jobMemo = jobMemo;
-    }
-
     public String getJobClass() {
         return jobClass;
     }
 
     public void setJobClass(String jobClass) {
         this.jobClass = jobClass;
-    }
-
-    public String getJobMethod() {
-        return jobMethod;
-    }
-
-    public void setJobMethod(String jobMethod) {
-        this.jobMethod = jobMethod;
-    }
-
-    public String getJobObject() {
-        return jobObject;
-    }
-
-    public void setJobObject(String jobObject) {
-        this.jobObject = jobObject;
-    }
-
-    public Long getCount() {
-        return count;
-    }
-
-    public void setCount(Long count) {
-        this.count = count;
     }
 
     public JobDataMap getJobDataMap() {
@@ -221,6 +148,46 @@ public class JobEntity implements Serializable {
 
     public void setCronExpression(String cronExpression) {
         this.cronExpression = cronExpression;
+    }
+
+    public String getOldJobName() {
+        return oldJobName;
+    }
+
+    public void setOldJobName(String oldJobName) {
+        this.oldJobName = oldJobName;
+    }
+
+    public String getOldJobGroupName() {
+        return oldJobGroupName;
+    }
+
+    public void setOldJobGroupName(String oldJobGroupName) {
+        this.oldJobGroupName = oldJobGroupName;
+    }
+
+    public String getOldTriggerName() {
+        return oldTriggerName;
+    }
+
+    public void setOldTriggerName(String oldTriggerName) {
+        this.oldTriggerName = oldTriggerName;
+    }
+
+    public String getOldTriggerGroupName() {
+        return oldTriggerGroupName;
+    }
+
+    public void setOldTriggerGroupName(String oldTriggerGroupName) {
+        this.oldTriggerGroupName = oldTriggerGroupName;
+    }
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
     }
 
 }
