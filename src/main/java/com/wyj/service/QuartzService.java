@@ -1,5 +1,11 @@
 package com.wyj.service;
-
+/**
+ * 定时任务 Service
+ * 
+ * 
+ * @author：WangYuanJun
+ * @date：2018年1月7日 下午10:16:26
+ */
 public interface QuartzService {
     /**
      * addJob(方法描述：添加一个定时任务) <br />

@@ -5,7 +5,7 @@ package com.wyj.constant;
  * 
  * 
  * @author：WangYuanJun
- * @date：2018年1月3日 下午4:58:25
+ * @date：2018年1月5日 下午10:23:12
  */
 public class CommonConstant {
 	

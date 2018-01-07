@@ -13,7 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wyj.service.QuartzService;
-
+/**
+ * 定时任务 ServiceImpl
+ * 
+ * 
+ * @author：WangYuanJun
+ * @date：2018年1月7日 下午10:16:43
+ */
 @Service("quartzService")
 public class QuartzServiceImpl implements QuartzService {
 
