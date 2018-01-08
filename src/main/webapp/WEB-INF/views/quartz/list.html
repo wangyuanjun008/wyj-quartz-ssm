@@ -4,118 +4,281 @@
 <#assign ctx = request.contextPath />
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script type="text/javascript" src="${ctx}/resources/plugins/angular-1.5.8/angular.min.js"></script>
-<script type="text/javascript" src="${ctx}/resources/plugins/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
-<script type="text/javascript" src="${ctx}/resources/plugins/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
-<link href="${ctx}/resources/plugins/bootstrap-3.3.7/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/resources/plugins/jquery-easyui-1.4.5/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/resources/plugins/jquery-easyui-1.4.5/themes/icon.css">
+<script type="text/javascript" src="${ctx}/resources/plugins/jquery-easyui-1.4.5/jquery.min.js"></script>
+<script type="text/javascript" src="${ctx}/resources/plugins/jquery-easyui-1.4.5/jquery.easyui.min.js"></script>
+<style type="text/css">
+.fitem {
+	margin-bottom: 5px;
+}
+
+.fitem label {
+	display: inline-block;
+	width: 130px;
+}
+<!--
+inline-block就是在同一行内的块级元素
+-->
+</style>
 </head>
-<body ng-app="myApp" ng-controller="jobController">
-<table>
-	<thead class="table table-striped">
-		<tr>
-			<th>名称1</th>
-			<th>名称2</th>
-		</tr
-	</thead>
-	<tbody>
-<!-- 		<#list jobs as job> -->
-<!-- 			<tr> -->
-<!-- 				<td>${job.jobId}</td> -->
-<!-- 				<td>${job.jobName}</td> -->
-<!-- 			</tr> -->
-<!-- 		</#list> -->
-		<tr ng-repeat="job in jobs">
-			<td>{{job.jobId}}</td>
-			<td>{{job.jobName}}</td>
-		</tr>
-	</tbody>
-</table>
+<body>
+	<table id="tt" class="easyui-datagrid" title="Job Information">
+	</table>
+	<div id="tb">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newJob();">新建</a> <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editJob();">编辑</a> <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeJob();">删除</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="stopJob();">暂停</a> <a href="#" class="easyui-linkbutton" iconCls="icon-redo" plain="true" onclick="resumeJob();">恢复</a>
+	</div>
 
-<!-- 定义模版 -->
-    <div ng-controller="ModalDemoCtrl">
-        <script type="text/ng-template" id="myModalContent.html">
-            <div class="modal-header">
-                <h3 class="modal-title">I'm a modal!</h3>
-            </div>
-            <div class="modal-body">
-                <ul>
-                    <li ng-repeat="item in items">
-                        <a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>
-                    </li>
-                </ul>
-                Selected: <b>{{ selected.item }}</b>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-                <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-            </div>
-        </script>
-
-        <button type="button" class="btn btn-default" ng-click="open()">Open me!</button>
-        <button type="button" class="btn btn-default" ng-click="open('lg')">Large modal</button>
-        <button type="button" class="btn btn-default" ng-click="open('sm')">Small modal</button>
-        <div ng-show="selected">Selection from a modal: {{ selected }}</div>
-    </div>
-
-
-
-<script type="text/javascript">
-// var app=angular.module("myApp",[]);
-// app.controller("jobController",function($scope, $http){
-//     $http.get("${ctx}/quartz/list")
-//     .then(function (result) {
-//         $scope.jobs = result.data;
-//     });
-// });
-
-
-
-angular.module('myApp', ['ui.bootstrap']).controller('ModalDemoCtrl', function ($scope, $uibModal, $log) {
-
-    $scope.items = ['item1', 'item2', 'item3'];
-
-    $scope.open = function (size) {
-        var modalInstance = $uibModal.open({
-            templateUrl: 'myModalContent.html',
-            controller: 'ModalInstanceCtrl',
-            backdrop: "static",
-            size: size,
-            resolve: {
-                items1: function () {
-                    return $scope.items;
+	<div id="dlg" class="easyui-dialog" style="width: 400px; height: 280px; padding: 10px 20px" closed="true" buttons="#dlg-buttons">
+		<form id="fm" method="post">
+			<div class="fitem">
+				<label>cronExpression:</label> <input name="cronExpression" class="easyui-validatebox" required="true" value="0/2 * * * * ?" />
+			</div>
+			<div class="fitem">
+				<label>jobClass:</label> <input name="jobClass" class="easyui-validatebox" required="true" value="com.wyj.job.HelloWorldJob" />
+			</div>
+			<div class="fitem">
+				<label>jobName:</label> <input name="jobName" value="job_1" />
+			</div>
+			<div class="fitem">
+				<label>jobGroupName:</label> <input name="jobGroupName" class="easyui-validatebox" value="jGroup1" />
+			</div>
+			<div class="fitem">
+				<label>triggerName:</label> <input name="triggerName" class="easyui-validatebox" value="trigger_1" />
+			</div>
+			<div class="fitem">
+				<label>triggerGroupName:</label> <input name="triggerGroupName" class="easyui-validatebox" value="triggerGroup1" />
+			</div>
+			<input name="oldJobName" type="hidden" /> <input name="oldJobGroupName" type="hidden" /> <input name="oldTriggerName" type="hidden" /> <input name="oldTriggerGroupName" type="hidden" />
+		</form>
+	</div>
+	<div id="dlg-buttons">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveJob();">保存</a> <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">关闭</a>
+	</div>
+	<script type="text/javascript">
+        var url;
+        $('#tt').datagrid({
+            rownumbers : true,
+            fitColumns : true,
+            toolbar : "#tb",
+            pagination : true,
+            singleSelect : true,
+            url : "${ctx}/quartz/list",
+            columns : [ [ {
+                field : 'jobGroupName',
+                title : '任务组名称',
+                width : 80,
+            }, {
+                field : 'jobName',
+                title : '定时任务名称',
+                width : 80
+            }, {
+                field : 'cronExpression',
+                title : '时间表达式',
+                width : 80
+            }, {
+                field : 'previousFireTime',
+                title : '上次运行时间',
+                width : 80,
+                formatter : formateTime
+            }, {
+                field : 'nextFireTime',
+                title : '下次运行时间',
+                width : 80,
+                formatter : formateTime
+            }, {
+                field : 'jobStatus',
+                title : '任务状态',
+                width : 80,
+                formatter : formateStatus
+            }, {
+                field : 'startTime',
+                title : '开始时间',
+                width : 80,
+                formatter : formateTime
+            }, {
+                field : 'endTime',
+                title : '结束时间',
+                width : 80,
+                formatter : formateTime
+            }, {
+                field : 'jobClass',
+                title : '任务类名',
+                width : 80
+            } ] ]
+        });
+        Date.prototype.format = function(fmt) {
+            var o = {
+                "M+" : this.getMonth() + 1, //月份 
+                "d+" : this.getDate(), //日 
+                "h+" : this.getHours(), //小时 
+                "m+" : this.getMinutes(), //分 
+                "s+" : this.getSeconds(), //秒 
+                "q+" : Math.floor((this.getMonth() + 3) / 3), //季度 
+                "S" : this.getMilliseconds()
+            //毫秒 
+            };
+            if (/(y+)/.test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            }
+            for ( var k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
                 }
             }
-        });
+            return fmt;
+        }
+        function formateTime(value, row, index) {
+            if (value == null || value == '') {
+                return '';
+            }
+            var dt;
+            if (value instanceof Date) {
+                dt = value;
+            } else {
+                dt = new Date(value);
+            }
 
-        modalInstance.result.then(function (selectedItem) {
-            $scope.selected = selectedItem;
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
-    };
-
-    $scope.toggleAnimation = function () {
-        $scope.animationsEnabled = !$scope.animationsEnabled;
-    };
-
-});
-
-//$uibModalInstance是模态窗口的实例  
-angular.module('myApp').controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items1) {
-    $scope.items = items1;
-    $scope.selected = {
-        item: $scope.items[0]
-    };
-
-    $scope.ok = function () {
-        $uibModalInstance.close($scope.selected.item);
-    };
-
-    $scope.cancel = function () {
-        $uibModalInstance.dismiss('cancel');
-    };
-});
-</script>
-
+            return dt.format("yyyy-MM-dd hh:mm:ss"); //扩展的Date的format方法(上述插件实现)  
+        }
+        function formateStatus(value, row, index) {
+            if (!value) {
+                return '';
+            }
+			if(value == 'NONE'){
+			    return '未知';
+			}else if(value == 'NORMAL'){
+			    return '正常运行';
+			}else if(value == 'PAUSED'){
+			    return '暂停状态';
+			}else if(value == 'COMPLETE'){
+			    return '完成状态';
+			}else if(value == 'ERROR'){
+			    return '错误状态';
+			}else if(value == 'BLOCKED'){
+			    return '锁定状态';
+			}
+        }
+        function newJob() {
+            $('#dlg').dialog('open').dialog('setTitle', 'New Job');
+            //             $('#fm').form('clear');
+            url = '${ctx}/quartz/add';
+        }
+        function editJob() {
+            var row = $('#tt').datagrid('getSelected');
+            if (row) {
+                $('#dlg').dialog('open').dialog('setTitle', 'Edit Job');
+                $('#fm').form('load', row);
+                url = '${ctx}/quartz/edit';
+            }
+            $("#fm input[name='oldJobName']").val($("#fm input[name='jobName']").val());
+            $("#fm input[name='oldJobGroupName']").val($("#fm input[name='jobGroupName']").val());
+            $("#fm input[name='oldTriggerName']").val($("#fm input[name='triggerName']").val());
+            $("#fm input[name='oldTriggerGroupName']").val($("#fm input[name='triggerGroupName']").val());
+        }
+        function saveJob() {
+            $('#fm').form('submit', {
+                url : url,
+                dataType : "JSON",
+                onSubmit : function(param) {
+                    return $(this).form('validate');
+                },
+                success : function(result) {
+                    var result = eval('(' + result + ')');
+                    if (result.success) {
+                        $('#dlg').dialog('close'); // close the dialog
+                        $('#tt').datagrid('reload'); // reload the Job data
+                        $.messager.show({
+                            title : 'Success',
+                            msg : result.data.message
+                        });
+                    } else {
+                        $.messager.show({
+                            title : 'Error',
+                            msg : result.errorMsg
+                        });
+                    }
+                }
+            });
+        }
+        function removeJob() {
+            var row = $('#tt').datagrid('getSelected');
+            if (row) {
+                $.messager.confirm('确认', '你确定删除Job吗?', function(r) {
+                    if (r) {
+                        $.post('remove_job.php', {
+                            id : row.id
+                        }, function(result) {
+                            if (result.success) {
+                                $('#tt').datagrid('reload'); // reload the Job data
+                                $.messager.show({
+                                    title : 'Success',
+                                    msg : result.data.message
+                                });
+                            } else {
+                                $.messager.show({
+                                    title : 'Error',
+                                    msg : result.errorMsg
+                                });
+                            }
+                        }, 'json');
+                    }
+                });
+            }
+        }
+        function stopJob() {
+            var row = $('#tt').datagrid('getSelected');
+            if (row) {
+                $.messager.confirm('确认', '你确定暂停Job吗?', function(r) {
+                    if (r) {
+                        $.post('${ctx}/quartz/stopJob', {
+                            jobName : row.jobName,
+                            jobGroupName : row.jobGroupName
+                        }, function(result) {
+                            if (result.success) {
+                                $('#tt').datagrid('reload'); // reload the Job data
+                                $.messager.show({
+                                    title : 'Success',
+                                    msg : result.data.message
+                                });
+                            } else {
+                                $.messager.show({
+                                    title : 'Error',
+                                    msg : result.errorMsg
+                                });
+                            }
+                        }, 'json');
+                    }
+                });
+            }
+        }
+        function resumeJob() {
+            var row = $('#tt').datagrid('getSelected');
+            if (row) {
+                $.messager.confirm('确认', '你确定恢复 Job吗??', function(r) {
+                    if (r) {
+                        $.post('${ctx}/quartz/resumeJob', {
+                            jobName : row.jobName,
+                            jobGroupName : row.jobGroupName
+                        }, function(result) {
+                            if (result.success) {
+                                $('#tt').datagrid('reload'); // reload the Job data
+                                $.messager.show({
+                                    title : 'Success',
+                                    msg : result.data.message
+                                });
+                            } else {
+                                $.messager.show({
+                                    title : 'Error',
+                                    msg : result.errorMsg
+                                });
+                            }
+                        }, 'json');
+                    }
+                });
+            }
+        }
+    </script>
 </body>
 </html>
