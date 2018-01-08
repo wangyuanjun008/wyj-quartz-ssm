@@ -36,11 +36,11 @@ public class JobDto implements Serializable {
 
     // private Long duration;
 
-    private Date startTime;
+    private Date startTime;//开始时间
 
-    private Date endTime;
+    private Date endTime;//结束时间
 
-    private String jobClass;
+    private String jobClass;//任务类名
 
     private Long count;
 
