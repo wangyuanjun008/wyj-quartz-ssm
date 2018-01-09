@@ -19,6 +19,8 @@
 }
 <!--
 inline-block就是在同一行内的块级元素
+
+
 -->
 </style>
 </head>
@@ -146,23 +148,23 @@ inline-block就是在同一行内的块级元素
             if (!value) {
                 return '';
             }
-			if(value == 'NONE'){
-			    return '未知';
-			}else if(value == 'NORMAL'){
-			    return '正常运行';
-			}else if(value == 'PAUSED'){
-			    return '暂停状态';
-			}else if(value == 'COMPLETE'){
-			    return '完成状态';
-			}else if(value == 'ERROR'){
-			    return '错误状态';
-			}else if(value == 'BLOCKED'){
-			    return '锁定状态';
-			}
+            if (value == 'NONE') {
+                return '未知';
+            } else if (value == 'NORMAL') {
+                return '正常运行';
+            } else if (value == 'PAUSED') {
+                return '暂停状态';
+            } else if (value == 'COMPLETE') {
+                return '完成状态';
+            } else if (value == 'ERROR') {
+                return '错误状态';
+            } else if (value == 'BLOCKED') {
+                return '锁定状态';
+            }
         }
         function newJob() {
             $('#dlg').dialog('open').dialog('setTitle', 'New Job');
-            //             $('#fm').form('clear');
+            $('#fm').form('clear');
             url = '${ctx}/quartz/add';
         }
         function editJob() {
